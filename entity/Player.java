@@ -27,6 +27,12 @@ public class Player extends Entity{
         screenX = gp.screenWidth/2 - (gp.tileSize);
         screenY = gp.screenHeight/2 - (gp.tileSize);
 
+        solidArea = new Rectangle();
+        solidArea.x = 40;
+        solidArea.y = 70;
+        solidArea.width = 45;
+        solidArea.height = 32;
+
         setDefaultValues();
         getPlayerImage();
     }
@@ -107,26 +113,40 @@ public class Player extends Entity{
             isMoving = true;
             if(keyH.upPressed){
                 direction = "up";
-                worldY -= speed + sprintSpeed;
+
             } else if (keyH.downPressed) {
                 direction = "down";
-                worldY += speed + sprintSpeed;
+
             }else if (keyH.leftPressed) {
                 direction = "left";
-                worldX -= speed + sprintSpeed;
+
             }else{
                 direction = "right";
-                worldX += speed + sprintSpeed;
+
             }
 
         }
-
+        //ljud när man går
         if(isMoving && !gp.walkSound.clip.isRunning()){
             gp.walkSound.loop();
         } else if(!isMoving){
             gp.walkSound.stop();
         }
 
+
+        //checkar tile collision
+        collisionOn = false;
+        gp.cChecker.checkTile(this);
+
+        //Om collision e false man kan röra på sig
+        if(!collisionOn){
+            switch (direction){
+                case "up": worldY -= speed + sprintSpeed; break;
+                case "down": worldY += speed + sprintSpeed; break;
+                case "left": worldX -= speed + sprintSpeed; break;
+                case "right": worldX += speed + sprintSpeed; break;
+            }
+        }
         spriteCounter++;
         if(spriteCounter > animSpeed-(sprintSpeed*2)){
             if(spriteNum == 1){
