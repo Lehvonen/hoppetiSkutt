@@ -12,9 +12,9 @@ import java.io.InputStreamReader;
 public class TileManager {
 
     GamePanel gp;
-    Tile[] tile;
+    public Tile[] tile;
 
-    int[][] mapTileNum;
+    public int[][] mapTileNum;
 
     public TileManager(GamePanel gp){
         this.gp = gp;
@@ -33,9 +33,11 @@ public class TileManager {
 
             tile[1] = new Tile();
             tile[1].image = ImageIO.read(getClass().getResourceAsStream("/res/tiles/Wall.png"));
+            tile[1].collision = true;
 
             tile[2] = new Tile();
             tile[2].image = ImageIO.read(getClass().getResourceAsStream("/res/tiles/Water.png"));
+            tile[2].collision = true;
 
             tile[3] = new Tile();
             tile[3].image = ImageIO.read(getClass().getResourceAsStream("/res/tiles/Door.png"));
@@ -48,15 +50,19 @@ public class TileManager {
 
             tile[6] = new Tile();
             tile[6].image = ImageIO.read(getClass().getResourceAsStream("/res/tiles/BigTreeTopRight.png"));
+            tile[6].collision = true;
 
             tile[7] = new Tile();
             tile[7].image = ImageIO.read(getClass().getResourceAsStream("/res/tiles/BigTreeTopLeft.png"));
+            tile[7].collision = true;
 
             tile[8] = new Tile();
             tile[8].image = ImageIO.read(getClass().getResourceAsStream("/res/tiles/BigTreeBotRight.png"));
+            tile[8].collision = true;
 
             tile[9] = new Tile();
             tile[9].image = ImageIO.read(getClass().getResourceAsStream("/res/tiles/BigTreeBotLeft.png"));
+            tile[9].collision = true;
 
             tile[10] = new Tile();
             tile[10].image = ImageIO.read(getClass().getResourceAsStream("/res/tiles/Roof.png"));
