@@ -1,0 +1,34 @@
+package main;
+
+
+public class PlayerTp {
+
+    static int[] StartToCastle = new int[4];
+    static int[] CastleToStart = new int[4];
+
+    public static void loadTpSpots(){
+        StartToCastle[0] = 1404;
+        StartToCastle[1] = 1449;
+        StartToCastle[3] = 475;
+
+        CastleToStart[0] = 1400;
+        CastleToStart[1] = 1496;
+        CastleToStart[2] = 2110;
+        CastleToStart[3] = 2140;
+    }
+
+    public static int[] tp(int x, int y){
+        int[] newPos = new int[2];
+        if(x >= StartToCastle[0] && x <= StartToCastle[1] && y < StartToCastle[3]){
+            newPos[0] = 1425;
+            newPos[1] = 2100;
+
+        }else if(x > CastleToStart[0] && x < CastleToStart[1] && y > CastleToStart[2] && y < CastleToStart[3]){
+            newPos[0] = 1425;
+            newPos[1] = 510;
+
+        }
+        return newPos;
+    }
+
+}
