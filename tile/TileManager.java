@@ -16,6 +16,8 @@ public class TileManager {
 
     public int[][] mapTileNum;
 
+
+
     public TileManager(GamePanel gp){
         this.gp = gp;
 
@@ -25,6 +27,7 @@ public class TileManager {
         getTileImage();
         loadMap("/maps/Start.txt");
     }
+
 
     public void getTileImage(){
         try{
@@ -40,7 +43,7 @@ public class TileManager {
             tile[2].collision = true;
 
             tile[3] = new Tile();
-            tile[3].image = ImageIO.read(getClass().getResourceAsStream("/res/tiles/Door.png"));
+            tile[3].image = ImageIO.read(getClass().getResourceAsStream("/res/tiles/DoorHole.png"));
 
             tile[4] = new Tile();
             tile[4].image = ImageIO.read(getClass().getResourceAsStream("/res/tiles/Flower.png"));
@@ -67,6 +70,14 @@ public class TileManager {
             tile[10] = new Tile();
             tile[10].image = ImageIO.read(getClass().getResourceAsStream("/res/tiles/Roof.png"));
 
+            tile[11] = new Tile();
+            tile[11].image = ImageIO.read(getClass().getResourceAsStream("/res/tiles/Void.png"));
+
+            tile[12] = new Tile();
+            tile[12].image = ImageIO.read(getClass().getResourceAsStream("/res/tiles/Chest.png"));
+
+
+
         }catch (IOException e){
             e.printStackTrace();
         }
@@ -76,6 +87,7 @@ public class TileManager {
 
         try {
             InputStream is = getClass().getResourceAsStream(filePath);
+
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
 
             int col = 0;
@@ -132,5 +144,7 @@ public class TileManager {
                 worldRow++;
             }
         }
+
+
     }
 }
