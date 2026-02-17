@@ -1,7 +1,11 @@
 package entity;
 
+import main.AssetSetter;
 import main.GamePanel;
 import main.KeyHandler;
+import main.PlayerTp;
+import tile.TileManager;
+
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -14,11 +18,16 @@ public class Player extends Entity{
     GamePanel gp;
     KeyHandler keyH;
 
+
+
     public final int screenX;
     public final int screenY;
 
     int animSpeed = 10;
     int sprintSpeed;
+    int currPosX = 0;
+    int currPosY = 0;
+
 
     public Player(GamePanel gp, KeyHandler keyH){
         this.gp = gp;
@@ -30,6 +39,8 @@ public class Player extends Entity{
         solidArea = new Rectangle();
         solidArea.x = 40;
         solidArea.y = 70;
+        solidAreaDefaultX = solidArea.x;
+        solidAreaDefaultY = solidArea.y;
         solidArea.width = 45;
         solidArea.height = 32;
 
@@ -113,18 +124,13 @@ public class Player extends Entity{
             isMoving = true;
             if(keyH.upPressed){
                 direction = "up";
-
             } else if (keyH.downPressed) {
                 direction = "down";
-
             }else if (keyH.leftPressed) {
                 direction = "left";
-
             }else{
                 direction = "right";
-
             }
-
         }
         //ljud när man går
         if(isMoving && !gp.walkSound.clip.isRunning()){
@@ -138,8 +144,15 @@ public class Player extends Entity{
         collisionOn = false;
         gp.cChecker.checkTile(this);
 
-        //Om collision e false man kan röra på sig
+        //checkar objeck collision
+        int objIndex = gp.cChecker.checkObject(this, true);
+        pickUpObject(objIndex);
+
+
+        //Om collision e false man kan röra på sig och uppdaterar currPosX och currPosY
         if(!collisionOn){
+            currPosX = worldX;
+            currPosY = worldY;
             switch (direction){
                 case "up": worldY -= speed + sprintSpeed; break;
                 case "down": worldY += speed + sprintSpeed; break;
@@ -157,6 +170,21 @@ public class Player extends Entity{
             spriteCounter = 0;
 
         }
+    }
+    public void pickUpObject(int i){
+        if (i != 999 && Objects.equals(gp.obj[i].name, "DoorOpen")) {
+            if(PlayerTp.tp(currPosX, currPosY)[0] != 0 && PlayerTp.tp(currPosX, currPosY)[1] != 0){
+                movePlayer(PlayerTp.tp(currPosX, currPosY));
+            }
+
+        }else if(i != 999){
+            gp.obj[i] = null;
+        }
+    }
+
+    public void movePlayer(int[] xAndy){
+        worldX = xAndy[0];
+        worldY = xAndy[1];
     }
     public void draw(Graphics2D g2){
 
@@ -267,4 +295,5 @@ public class Player extends Entity{
 
         g2.drawImage(image, screenX, screenY, gp.tileSize+30, gp.tileSize+30, null);
     }
+
 }
