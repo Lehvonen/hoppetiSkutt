@@ -4,8 +4,8 @@ Personal project
 
 
 
-Programming: Ivar Lehvonen \n
-Art: Ivar Lehvonen (piskelapp.com)\n
-Music: Ivar Lehvonen (beepbox.co)\n
+Programming: Ivar Lehvonen 
+Art: Ivar Lehvonen (piskelapp.com)
+Music: Ivar Lehvonen (beepbox.co)
 \n
 100% Java
