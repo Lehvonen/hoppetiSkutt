@@ -11,8 +11,8 @@ public class PlayerTp {
         StartToCastle[1] = 1449;
         StartToCastle[3] = 475;
 
-        CastleToStart[0] = 1400;
-        CastleToStart[1] = 1496;
+        CastleToStart[0] = 1300;
+        CastleToStart[1] = 1800;
         CastleToStart[2] = 2110;
         CastleToStart[3] = 2140;
     }
@@ -20,11 +20,11 @@ public class PlayerTp {
     public static int[] tp(int x, int y){
         int[] newPos = new int[2];
         if(x >= StartToCastle[0] && x <= StartToCastle[1] && y < StartToCastle[3]){
-            newPos[0] = 1425;
+            newPos[0] = x;
             newPos[1] = 2100;
 
         }else if(x > CastleToStart[0] && x < CastleToStart[1] && y > CastleToStart[2] && y < CastleToStart[3]){
-            newPos[0] = 1425;
+            newPos[0] = x;
             newPos[1] = 510;
 
         }
