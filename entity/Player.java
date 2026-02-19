@@ -17,14 +17,15 @@ public class Player extends Entity{
 
     GamePanel gp;
     KeyHandler keyH;
-
+    String pick = "";
 
 
     public final int screenX;
     public final int screenY;
 
+    int hasKey = 0;
+    int pickUpAnim = 0;
     int animSpeed = 10;
-    int sprintSpeed;
     int currPosX = 0;
     int currPosY = 0;
 
@@ -83,6 +84,8 @@ public class Player extends Entity{
             P_UpPunch_2 = ImageIO.read(getClass().getResourceAsStream("/res/player/P_UpPunch_2.png"));
             P_DownPunch_1 = ImageIO.read(getClass().getResourceAsStream("/res/player/P_DownPunch_1.png"));
             P_DownPunch_2 = ImageIO.read(getClass().getResourceAsStream("/res/player/P_DownPunch_2.png"));
+            P_PickUpRight_1 = ImageIO.read(getClass().getResourceAsStream("/res/player/P_PickUpRight_1.png"));
+            P_PickUpRight_2 = ImageIO.read(getClass().getResourceAsStream("/res/player/P_PickUpRight_2.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -90,12 +93,7 @@ public class Player extends Entity{
     public void update (){
         boolean isMoving = false;
 
-        if(keyH.shiftPressed){
-            sprintSpeed = 2;
-        }
-        if(!keyH.shiftPressed){
-            sprintSpeed = 0;
-        }
+
         if(keyH.spacePressed){
             if(Objects.equals(direction, "left") || Objects.equals(direction, "leftNone")){
                 action = "punchLeft";
@@ -110,6 +108,7 @@ public class Player extends Entity{
         if(!keyH.spacePressed){
             action = "none";
         }
+
         if(Objects.equals(direction, "up") || Objects.equals(direction, "upNone")){
             direction = "upNone";
         }else if(Objects.equals(direction, "down") || Objects.equals(direction, "downNone")){
@@ -132,12 +131,12 @@ public class Player extends Entity{
                 direction = "right";
             }
         }
-        //ljud när man går
-        if(isMoving && !gp.walkSound.clip.isRunning()){
-            gp.walkSound.loop();
-        } else if(!isMoving){
-            gp.walkSound.stop();
+
+        if(keyH.ePressed && Objects.equals(direction, "right") || Objects.equals(direction, "rightNone")){
+            pick = "pickUpRight";
+            pickUpAnim = 10;
         }
+
 
 
         //checkar tile collision
@@ -154,14 +153,14 @@ public class Player extends Entity{
             currPosX = worldX;
             currPosY = worldY;
             switch (direction){
-                case "up": worldY -= speed + sprintSpeed; break;
-                case "down": worldY += speed + sprintSpeed; break;
-                case "left": worldX -= speed + sprintSpeed; break;
-                case "right": worldX += speed + sprintSpeed; break;
+                case "up": worldY -= speed; break;
+                case "down": worldY += speed; break;
+                case "left": worldX -= speed; break;
+                case "right": worldX += speed; break;
             }
         }
         spriteCounter++;
-        if(spriteCounter > animSpeed-(sprintSpeed*2)){
+        if(spriteCounter > animSpeed+pickUpAnim){
             if(spriteNum == 1){
                 spriteNum = 2;
             } else if (spriteNum == 2) {
@@ -170,15 +169,39 @@ public class Player extends Entity{
             spriteCounter = 0;
 
         }
+        //ljud när man går
+        if(isMoving){
+            gp.walkSound.play();
+        } else{
+            gp.walkSound.stop();
+        }
     }
     public void pickUpObject(int i){
         if (i != 999 && Objects.equals(gp.obj[i].name, "DoorOpen")) {
             if(PlayerTp.tp(currPosX, currPosY)[0] != 0 && PlayerTp.tp(currPosX, currPosY)[1] != 0){
+                gp.playSE(5);
                 movePlayer(PlayerTp.tp(currPosX, currPosY));
             }
 
         }else if(i != 999){
-            gp.obj[i] = null;
+            String objectName = gp.obj[i].name;
+
+            switch(objectName){
+                case "Key":
+                    gp.playSE(1);
+                    hasKey++;
+                    gp.obj[i] = null;
+                    break;
+                case "Door":
+                    if(hasKey > 0){
+                        gp.obj[i] = null;
+                        hasKey--;
+                    }
+                    break;
+                case "Boots":
+                    speed += 2;
+                    gp.obj[i] = null;
+            }
         }
     }
 
@@ -186,114 +209,115 @@ public class Player extends Entity{
         worldX = xAndy[0];
         worldY = xAndy[1];
     }
-    public void draw(Graphics2D g2){
+
+
+    public void draw(Graphics2D g2) {
 
         BufferedImage image = null;
-        if(Objects.equals(action, "none")){
-            switch (direction){
+        if (Objects.equals(action, "none")) {
+            switch (direction) {
                 case "leftNone":
-                    if(spriteNum == 1){
+                    if (spriteNum == 1) {
                         image = P_LeftIdle_1; //för walking animationin
                     }
-                    if(spriteNum == 2){
+                    if (spriteNum == 2) {
                         image = P_LeftIdle_2;
                     }
                     break;
                 case "rightNone":
-                    if(spriteNum == 1){
+                    if (spriteNum == 1) {
                         image = P_RightIdle_1; //för walking animationin
                     }
-                    if(spriteNum == 2){
+                    if (spriteNum == 2) {
                         image = P_RightIdle_2;
                     }
                     break;
                 case "upNone":
-                    if(spriteNum == 1){
+                    if (spriteNum == 1) {
                         image = P_UpDef_1; //för walking animationin
                     }
-                    if(spriteNum == 2){
+                    if (spriteNum == 2) {
                         image = P_UpDef_2;
                     }
                     break;
                 case "downNone":
-                    if(spriteNum == 1){
+                    if (spriteNum == 1) {
                         image = P_Def_1; //för walking animationin
                     }
-                    if(spriteNum == 2){
+                    if (spriteNum == 2) {
                         image = P_Def_2;
                     }
                     break;
                 case "up":
-                    if(spriteNum == 1){
+                    if (spriteNum == 1) {
                         image = P_Up_1; //för walking animationin
                     }
-                    if(spriteNum == 2){
+                    if (spriteNum == 2) {
                         image = P_Up_2;
                     }
                     break;
                 case "down":
-                    if(spriteNum == 1){
+                    if (spriteNum == 1) {
                         image = P_Down_1; //för walking animationin
                     }
-                    if(spriteNum == 2){
+                    if (spriteNum == 2) {
                         image = P_Down_2;
                     }
                     break;
                 case "left":
-                    if(spriteNum == 1){
+                    if (spriteNum == 1) {
                         image = P_Left_1; //för walking animationin
                     }
-                    if(spriteNum == 2){
+                    if (spriteNum == 2) {
                         image = P_Left_2;
                     }
                     break;
                 case "right":
-                    if(spriteNum == 1){
+                    if (spriteNum == 1) {
                         image = P_Right_1; //för walking animationin
                     }
-                    if(spriteNum == 2){
+                    if (spriteNum == 2) {
                         image = P_Right_2;
                     }
                     break;
             }
         } else{
-            switch (action){
+            switch (action) {
                 case "punchRight":
-                    if(spriteNum == 1){
+                    if (spriteNum == 1) {
                         image = P_PunchRight_1; //för slag animationin
                     }
-                    if(spriteNum == 2){
+                    if (spriteNum == 2) {
                         image = P_PunchRight_2;
                     }
                     break;
                 case "punchLeft":
-                    if(spriteNum == 1){
+                    if (spriteNum == 1) {
                         image = P_PunchLeft_1; //för slag animationin
                     }
-                    if(spriteNum == 2){
+                    if (spriteNum == 2) {
                         image = P_PunchLeft_2;
                     }
                     break;
                 case "punchUp":
-                    if(spriteNum == 1){
+                    if (spriteNum == 1) {
                         image = P_UpPunch_1; //för slag animationin
                     }
-                    if(spriteNum == 2){
+                    if (spriteNum == 2) {
                         image = P_UpPunch_2;
                     }
                     break;
                 case "punchDown":
-                    if(spriteNum == 1){
+                    if (spriteNum == 1) {
                         image = P_DownPunch_1; //för slag animationin
                     }
-                    if(spriteNum == 2){
+                    if (spriteNum == 2) {
                         image = P_DownPunch_2;
                     }
                     break;
+
             }
         }
-
-        g2.drawImage(image, screenX, screenY, gp.tileSize+30, gp.tileSize+30, null);
+        g2.drawImage(image, screenX, screenY, gp.tileSize + 30, gp.tileSize + 30, null);
     }
-
 }
