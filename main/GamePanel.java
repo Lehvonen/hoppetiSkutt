@@ -4,13 +4,20 @@ import entity.Player;
 import object.SuperObject;
 import tile.TileManager;
 
+import javax.sound.sampled.*;
 import javax.swing.JPanel;
 import java.awt.*;
+import java.io.IOException;
+import java.net.URL;
+
 
 public class GamePanel extends JPanel implements Runnable{
 
-    //skärm settings
+    //walk sound
+    public Sound walkSound = new Sound();
 
+
+    //skärm settings
     final int originalTileSize = 16;
     final int scale = 6;
 
@@ -23,18 +30,20 @@ public class GamePanel extends JPanel implements Runnable{
     //world parameter
     public final int maxWorldCol = 64;
     public final int maxWorldRow = 34;
-    public final int worldWidth = tileSize * maxWorldCol;
-    public final int worldHeight = tileSize * maxWorldRow;
+
+    //FPS
     int FPS = 60;
 
+    //System
     public TileManager tileM = new TileManager(this);
     KeyHandler keyH = new KeyHandler();
-    Thread gameThread;
+    Sound sound = new Sound();
     public CollisionChecker cChecker = new CollisionChecker(this);
     public AssetSetter aSetter = new AssetSetter(this);
+    Thread gameThread;
+    //Entity & Object
     public Player player = new Player(this, keyH);
-    public Sound walkSound = new Sound();
-    public SuperObject[] obj = new SuperObject[10];
+    public  SuperObject[] obj = new SuperObject[10];
 
 
     public GamePanel(){
@@ -43,12 +52,13 @@ public class GamePanel extends JPanel implements Runnable{
         this.setDoubleBuffered(true);
         this.addKeyListener(keyH);
         this.setFocusable(true);
-
-        walkSound.setFile("/res/sound/Walking.wav");
     }
 
     public void setupGame() {
+
         aSetter.setObject();
+        playMusic(2);
+        walkSound.setFile(4);
     }
 
     public void setGameThread() {
@@ -88,10 +98,9 @@ public class GamePanel extends JPanel implements Runnable{
 
     }
 
+
     public void update() {
     player.update();
-
-
     }
 
     public void paintComponent(Graphics g) {
@@ -111,5 +120,18 @@ public class GamePanel extends JPanel implements Runnable{
         player.draw(g2);
 
         g2.dispose();
+    }
+
+    public void playMusic(int i){
+        sound.setFile(i);
+        sound.play();
+        sound.loop();
+    }
+    public void stopMusic(){
+        sound.stop();
+    }
+    public void playSE(int i){
+        sound.setFile(i);
+        sound.play();
     }
 }
