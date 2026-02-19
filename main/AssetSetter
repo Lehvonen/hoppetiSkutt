@@ -1,10 +1,7 @@
 package main;
 
 import javafx.scene.canvas.GraphicsContext;
-import object.Obj_Door;
-import object.Obj_DoorOpen;
-import object.Obj_Key;
-import object.SuperObject;
+import object.*;
 
 import java.awt.*;
 import java.util.Objects;
@@ -12,7 +9,6 @@ import java.util.Objects;
 public class AssetSetter {
 
     GamePanel gp;
-
 
     public AssetSetter(GamePanel gp){
         this.gp = gp;
@@ -34,12 +30,19 @@ public class AssetSetter {
         gp.obj[3].worldX = 15 * gp.tileSize;
         gp.obj[3].worldY = 23 * gp.tileSize;
 
-        gp.obj[4] = new Obj_Door();
-        gp.obj[4].worldX = 15 * gp.tileSize;
-        gp.obj[4].worldY = 23 * gp.tileSize;
+        gp.obj[4] = new Obj_Chest();
+        gp.obj[4].worldX = 22 * gp.tileSize;
+        gp.obj[4].worldY = 19 * gp.tileSize;
+
+        gp.obj[5] = new Obj_Sword();
+        gp.obj[5].worldX = 23 * gp.tileSize;
+        gp.obj[5].worldY = 19 * gp.tileSize;
+
+        gp.obj[6] = new Obj_Boots();
+        gp.obj[6].worldX = 24 * gp.tileSize;
+        gp.obj[6].worldY = 19 * gp.tileSize;
 
     }
 
 
 }
-
